@@ -168,6 +168,10 @@ var RainDrop = function () {
 
 ;
 
+var Splatter = function Splatter() {
+    _classCallCheck(this, Splatter);
+};
+
 function randomRainDrop(c) {
 
     var x = _utils2.default.randomIntFromRange(0, innerWidth);
@@ -176,8 +180,8 @@ function randomRainDrop(c) {
         x: 0,
         y: _utils2.default.randomIntFromRange(5, 15)
     };
-    var radius = _utils2.default.randomIntFromRange(1, 2);
-    var drop = new RainDrop(x, y, velocity, radius, 'blue', c);
+    var radius = _utils2.default.randomIntFromRange(1, 3);
+    var drop = new RainDrop(x, y, velocity, radius, 'red', c);
 
     return drop;
 }

@@ -53,6 +53,10 @@ class RainDrop {
     }
 };
 
+class Splatter {
+
+}
+
 function randomRainDrop(c) {
 
     let x = utils.randomIntFromRange(0, innerWidth)
@@ -61,8 +65,8 @@ function randomRainDrop(c) {
         x: 0,
         y: utils.randomIntFromRange(5,15)
     }
-    let radius = utils.randomIntFromRange(1,2);
-    let drop = new RainDrop(x,y,velocity,radius,'blue',c);
+    let radius = utils.randomIntFromRange(1,3);
+    let drop = new RainDrop(x,y,velocity,radius,'red',c);
 
     return drop;
 }
