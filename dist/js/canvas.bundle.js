@@ -100,6 +100,10 @@ var _utils = __webpack_require__(/*! ./utils */ "./src/utils.js");
 
 var _utils2 = _interopRequireDefault(_utils);
 
+var _raindrop = __webpack_require__(/*! ./models/raindrop */ "./src/models/raindrop.js");
+
+var _raindrop2 = _interopRequireDefault(_raindrop);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var canvas = document.querySelector('canvas');
@@ -128,33 +132,12 @@ addEventListener('resize', function () {
     init();
 });
 
-// Objects
-function Object(x, y, radius, color) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.color = color;
-}
-
-Object.prototype.draw = function () {
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    c.fillStyle = this.color;
-    c.fill();
-    c.closePath();
-};
-
-Object.prototype.update = function () {
-    this.draw();
-};
-
 // Implementation
-var objects = void 0;
+var rain = void 0;
 function init() {
-    objects = [];
-
-    for (var i = 0; i < 400; i++) {
-        // objects.push();
+    rain = [];
+    for (var i = 0; i < 200; i++) {
+        rain.push(_utils2.default.randomRainDrop(c));
     }
 }
 
@@ -163,14 +146,89 @@ function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height);
 
-    c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y);
-    // objects.forEach(object => {
-    //  object.update();
-    // });
+    rain.forEach(function (drop, index) {
+        drop.update();
+    });
+    // console.log(rain)
 }
 
 init();
 animate();
+
+/***/ }),
+
+/***/ "./src/models/raindrop.js":
+/*!********************************!*\
+  !*** ./src/models/raindrop.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _utils = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+var utils = _interopRequireWildcard(_utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var RainDrop = function () {
+    function RainDrop(x, y, velocity, radius, color, c) {
+        _classCallCheck(this, RainDrop);
+
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.velocity = velocity;
+        this.color = color;
+        this.c = c;
+        this.gravity = .1;
+    }
+
+    _createClass(RainDrop, [{
+        key: 'draw',
+        value: function draw() {
+            this.c.beginPath();
+            this.c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            this.c.fillStyle = this.color;
+            this.c.fill();
+            this.c.closePath();
+        }
+    }, {
+        key: 'randomIntFromRange',
+        value: function randomIntFromRange(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+            this.draw();
+
+            if (this.y + this.radius > innerHeight) {
+
+                this.x = this.randomIntFromRange(0, innerWidth);
+                this.y = this.randomIntFromRange(-1000, 0);
+                this.velocity.y = this.randomIntFromRange(5, 15);
+            }
+
+            this.velocity.y += this.gravity;
+            this.y += this.velocity.y;
+        }
+    }]);
+
+    return RainDrop;
+}();
+
+exports.default = RainDrop;
 
 /***/ }),
 
@@ -183,6 +241,12 @@ animate();
 
 "use strict";
 
+
+var _raindrop = __webpack_require__(/*! ./models/raindrop */ "./src/models/raindrop.js");
+
+var _raindrop2 = _interopRequireDefault(_raindrop);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function randomIntFromRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -199,7 +263,21 @@ function distance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
 }
 
-module.exports = { randomIntFromRange: randomIntFromRange, randomColor: randomColor, distance: distance };
+function randomRainDrop(c) {
+
+    var x = this.randomIntFromRange(0, innerWidth);
+    var y = this.randomIntFromRange(-5000, 0);
+    var velocity = {
+        x: 0,
+        y: this.randomIntFromRange(5, 15)
+    };
+    var radius = this.randomIntFromRange(1, 3);
+    var drop = new _raindrop2.default(x, y, velocity, radius, 'blue', c);
+
+    return drop;
+}
+
+module.exports = { randomIntFromRange: randomIntFromRange, randomColor: randomColor, distance: distance, randomRainDrop: randomRainDrop };
 
 /***/ })
 

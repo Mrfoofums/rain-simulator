@@ -1,3 +1,5 @@
+import RainDrop from './models/raindrop';
+
 function randomIntFromRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -13,4 +15,19 @@ function distance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2))
 }
 
-module.exports = { randomIntFromRange, randomColor, distance }
+function randomRainDrop(c){
+
+    let x = this.randomIntFromRange(0, innerWidth)
+    let y = this.randomIntFromRange(-5000,0);
+    let velocity = {
+        x: 0,
+        y: this.randomIntFromRange(5,15)
+    }
+    let radius = this.randomIntFromRange(1,3);
+    let drop = new RainDrop(x,y,velocity,radius,'blue',c);
+
+    return drop;
+}
+
+
+module.exports = { randomIntFromRange, randomColor, distance, randomRainDrop }

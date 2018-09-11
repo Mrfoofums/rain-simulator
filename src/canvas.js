@@ -1,4 +1,5 @@
 import utils from './utils'
+import RainDrop from './models/raindrop'
 
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
@@ -10,6 +11,7 @@ const mouse = {
     x: innerWidth / 2,
     y: innerHeight / 2
 }
+
 
 const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
 
@@ -26,33 +28,12 @@ addEventListener('resize', () => {
     init()
 })
 
-// Objects
-function Object(x, y, radius, color) {
-    this.x = x
-    this.y = y
-    this.radius = radius
-    this.color = color
-}
-
-Object.prototype.draw = function() {
-    c.beginPath()
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
-    c.fillStyle = this.color
-    c.fill()
-    c.closePath()
-}
-
-Object.prototype.update = function() {
-    this.draw()
-}
-
 // Implementation
-let objects
+let rain
 function init() {
-    objects = []
-
-    for (let i = 0; i < 400; i++) {
-        // objects.push();
+    rain = []
+    for (let i = 0; i < 200; i++) {
+        rain.push(utils.randomRainDrop(c))
     }
 }
 
@@ -61,10 +42,10 @@ function animate() {
     requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
 
-    c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y)
-    // objects.forEach(object => {
-    //  object.update();
-    // });
+    rain.forEach((drop,index) => {
+        drop.update();
+    });
+    // console.log(rain)
 }
 
 init()
