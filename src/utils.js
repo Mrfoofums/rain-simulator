@@ -14,7 +14,4 @@ function distance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2))
 }
 
-
-
-
 module.exports = { randomIntFromRange, randomColor, distance }

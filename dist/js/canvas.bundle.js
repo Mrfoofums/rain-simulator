@@ -176,7 +176,7 @@ function randomRainDrop(c) {
         x: 0,
         y: _utils2.default.randomIntFromRange(5, 15)
     };
-    var radius = _utils2.default.randomIntFromRange(1, 3);
+    var radius = _utils2.default.randomIntFromRange(1, 2);
     var drop = new RainDrop(x, y, velocity, radius, 'blue', c);
 
     return drop;

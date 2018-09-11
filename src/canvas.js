@@ -61,7 +61,7 @@ function randomRainDrop(c) {
         x: 0,
         y: utils.randomIntFromRange(5,15)
     }
-    let radius = utils.randomIntFromRange(1,3);
+    let radius = utils.randomIntFromRange(1,2);
     let drop = new RainDrop(x,y,velocity,radius,'blue',c);
 
     return drop;
