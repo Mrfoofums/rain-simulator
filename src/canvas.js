@@ -1,5 +1,4 @@
 import utils from './utils'
-import RainDrop from './models/raindrop'
 
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
@@ -14,6 +13,59 @@ const mouse = {
 
 
 const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
+
+class RainDrop {
+  
+    constructor(x,y, velocity ,radius, color, c){
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.velocity = velocity;
+        this.color = color;
+        this.c = c;
+        this.gravity = .1;
+    }
+
+    draw(){
+        this.c.beginPath()
+        this.c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
+        this.c.fillStyle = this.color
+        this.c.fill()
+        this.c.closePath()
+    }
+
+   randomIntFromRange(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+
+    update(){
+        this.draw();
+
+        if(this.y + this.radius > innerHeight){
+
+            this.x = utils.randomIntFromRange(0, innerWidth)
+            this.y = utils.randomIntFromRange(-1000,0);
+            this.velocity.y = utils.randomIntFromRange(5,15)
+        }
+
+        this.velocity.y += this.gravity;
+        this.y+=this.velocity.y 
+    }
+};
+
+function randomRainDrop(c) {
+
+    let x = utils.randomIntFromRange(0, innerWidth)
+    let y = utils.randomIntFromRange(-5000,0);
+    let velocity = {
+        x: 0,
+        y: utils.randomIntFromRange(5,15)
+    }
+    let radius = utils.randomIntFromRange(1,3);
+    let drop = new RainDrop(x,y,velocity,radius,'blue',c);
+
+    return drop;
+}
 
 // Event Listeners
 addEventListener('mousemove', event => {
@@ -32,8 +84,8 @@ addEventListener('resize', () => {
 let rain
 function init() {
     rain = []
-    for (let i = 0; i < 200; i++) {
-        rain.push(utils.randomRainDrop(c))
+    for (let i = 0; i < 1000; i++) {
+        rain.push(randomRainDrop(c))
     }
 }
 

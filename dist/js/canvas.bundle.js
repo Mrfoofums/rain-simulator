@@ -96,15 +96,15 @@
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _utils = __webpack_require__(/*! ./utils */ "./src/utils.js");
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _raindrop = __webpack_require__(/*! ./models/raindrop */ "./src/models/raindrop.js");
-
-var _raindrop2 = _interopRequireDefault(_raindrop);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var canvas = document.querySelector('canvas');
 var c = canvas.getContext('2d');
@@ -118,68 +118,6 @@ var mouse = {
 };
 
 var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
-
-// Event Listeners
-addEventListener('mousemove', function (event) {
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
-});
-
-addEventListener('resize', function () {
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-
-    init();
-});
-
-// Implementation
-var rain = void 0;
-function init() {
-    rain = [];
-    for (var i = 0; i < 200; i++) {
-        rain.push(_utils2.default.randomRainDrop(c));
-    }
-}
-
-// Animation Loop
-function animate() {
-    requestAnimationFrame(animate);
-    c.clearRect(0, 0, canvas.width, canvas.height);
-
-    rain.forEach(function (drop, index) {
-        drop.update();
-    });
-    // console.log(rain)
-}
-
-init();
-animate();
-
-/***/ }),
-
-/***/ "./src/models/raindrop.js":
-/*!********************************!*\
-  !*** ./src/models/raindrop.js ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _utils = __webpack_require__(/*! ../utils */ "./src/utils.js");
-
-var utils = _interopRequireWildcard(_utils);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var RainDrop = function () {
     function RainDrop(x, y, velocity, radius, color, c) {
@@ -215,9 +153,9 @@ var RainDrop = function () {
 
             if (this.y + this.radius > innerHeight) {
 
-                this.x = this.randomIntFromRange(0, innerWidth);
-                this.y = this.randomIntFromRange(-1000, 0);
-                this.velocity.y = this.randomIntFromRange(5, 15);
+                this.x = _utils2.default.randomIntFromRange(0, innerWidth);
+                this.y = _utils2.default.randomIntFromRange(-1000, 0);
+                this.velocity.y = _utils2.default.randomIntFromRange(5, 15);
             }
 
             this.velocity.y += this.gravity;
@@ -228,7 +166,57 @@ var RainDrop = function () {
     return RainDrop;
 }();
 
-exports.default = RainDrop;
+;
+
+function randomRainDrop(c) {
+
+    var x = _utils2.default.randomIntFromRange(0, innerWidth);
+    var y = _utils2.default.randomIntFromRange(-5000, 0);
+    var velocity = {
+        x: 0,
+        y: _utils2.default.randomIntFromRange(5, 15)
+    };
+    var radius = _utils2.default.randomIntFromRange(1, 3);
+    var drop = new RainDrop(x, y, velocity, radius, 'blue', c);
+
+    return drop;
+}
+
+// Event Listeners
+addEventListener('mousemove', function (event) {
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+});
+
+addEventListener('resize', function () {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+
+    init();
+});
+
+// Implementation
+var rain = void 0;
+function init() {
+    rain = [];
+    for (var i = 0; i < 1000; i++) {
+        rain.push(randomRainDrop(c));
+    }
+}
+
+// Animation Loop
+function animate() {
+    requestAnimationFrame(animate);
+    c.clearRect(0, 0, canvas.width, canvas.height);
+
+    rain.forEach(function (drop, index) {
+        drop.update();
+    });
+    // console.log(rain)
+}
+
+init();
+animate();
 
 /***/ }),
 
@@ -241,12 +229,6 @@ exports.default = RainDrop;
 
 "use strict";
 
-
-var _raindrop = __webpack_require__(/*! ./models/raindrop */ "./src/models/raindrop.js");
-
-var _raindrop2 = _interopRequireDefault(_raindrop);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function randomIntFromRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -263,21 +245,7 @@ function distance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
 }
 
-function randomRainDrop(c) {
-
-    var x = this.randomIntFromRange(0, innerWidth);
-    var y = this.randomIntFromRange(-5000, 0);
-    var velocity = {
-        x: 0,
-        y: this.randomIntFromRange(5, 15)
-    };
-    var radius = this.randomIntFromRange(1, 3);
-    var drop = new _raindrop2.default(x, y, velocity, radius, 'blue', c);
-
-    return drop;
-}
-
-module.exports = { randomIntFromRange: randomIntFromRange, randomColor: randomColor, distance: distance, randomRainDrop: randomRainDrop };
+module.exports = { randomIntFromRange: randomIntFromRange, randomColor: randomColor, distance: distance };
 
 /***/ })
 
