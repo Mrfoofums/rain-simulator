@@ -152,14 +152,28 @@ var RainDrop = function () {
             this.draw();
 
             if (this.y + this.radius > innerHeight) {
+                this.splatter();
 
                 this.x = _utils2.default.randomIntFromRange(0, innerWidth);
                 this.y = _utils2.default.randomIntFromRange(-1000, 0);
                 this.velocity.y = _utils2.default.randomIntFromRange(5, 15);
+            } else {
+                this.velocity.y += this.gravity;
             }
-
-            this.velocity.y += this.gravity;
             this.y += this.velocity.y;
+        }
+    }, {
+        key: 'splatter',
+        value: function splatter() {
+            console.log('splatting');
+            for (var i = 0; i < 5; i++) {
+                var velocity = {
+                    x: _utils2.default.randomIntFromRange(-5, 5),
+                    y: _utils2.default.randomIntFromRange(-5, 5)
+                };
+                // let radius = 1;
+                _splatter.push(new Splatter(this.x, this.y, velocity, this.radius / 2, 'white'));
+            }
         }
     }]);
 
@@ -168,9 +182,54 @@ var RainDrop = function () {
 
 ;
 
-var Splatter = function Splatter() {
-    _classCallCheck(this, Splatter);
-};
+var Splatter = function () {
+    function Splatter(x, y, velocity, radius, color) {
+        _classCallCheck(this, Splatter);
+
+        this.x = x;
+        this.y = y;
+        this.velocity = velocity;
+        this.color = color;
+        this.radius = radius;
+
+        this.friction = 0.8;
+        this.gravity = .1;
+        this.ttl = 100;
+        this.opacity = 1;
+    }
+
+    _createClass(Splatter, [{
+        key: 'draw',
+        value: function draw() {
+            c.save();
+            c.beginPath();
+            c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            c.fillStyle = 'rgba(255,255,255,' + this.opacity + ')';
+            c.shadowColor = '#E3EAEF';
+            c.shadowBlur = 20;
+            c.fill();
+            c.closePath();
+            c.restore();
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+            this.draw();
+
+            if (this.y + this.radius + this.velocity.y > canvas.height || this.y - this.radius <= 0) {
+                this.velocity.y = -this.velocity.y * this.friction;
+            } else {
+                this.velocity.y += this.gravity;
+            }
+            this.y += this.velocity.y;
+            this.x += this.velocity.x;
+            this.ttl -= 1;
+            this.opacity -= 1 / this.ttl;
+        }
+    }]);
+
+    return Splatter;
+}();
 
 function randomRainDrop(c) {
 
@@ -181,7 +240,7 @@ function randomRainDrop(c) {
         y: _utils2.default.randomIntFromRange(5, 15)
     };
     var radius = _utils2.default.randomIntFromRange(1, 3);
-    var drop = new RainDrop(x, y, velocity, radius, 'red', c);
+    var drop = new RainDrop(x, y, velocity, radius, 'white', c);
 
     return drop;
 }
@@ -201,9 +260,11 @@ addEventListener('resize', function () {
 
 // Implementation
 var rain = void 0;
+var _splatter = void 0;
 function init() {
+    _splatter = [];
     rain = [];
-    for (var i = 0; i < 1000; i++) {
+    for (var i = 0; i < 100; i++) {
         rain.push(randomRainDrop(c));
     }
 }
@@ -216,7 +277,15 @@ function animate() {
     rain.forEach(function (drop, index) {
         drop.update();
     });
-    // console.log(rain)
+
+    _splatter.forEach(function (splat, index) {
+        //lol @ splat
+        splat.update();
+        if (splat.ttl == 0) {
+            _splatter.splice(index, 1);
+        }
+    });
+    // console.log(splatter)
 }
 
 init();
