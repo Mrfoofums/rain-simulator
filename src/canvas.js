@@ -48,7 +48,7 @@ function RainDrop(x,y, velocity ,radius, color) {
 
     }
 
-    Raindrop.prototype.splatter = function (){
+    RainDrop.prototype.splatter = function (){
         // console.log('splatting')
         for(let i =0; i < 3; i ++){
             let velocity = {
@@ -69,7 +69,7 @@ function  Splatter (x,y,velocity,radius,color) {
 
         this.friction = 0.8;
         this.gravity = .1;
-        this.ttl = 100;
+        this.ttl = 50;
         this.opacity = 1;
     }
 
@@ -132,7 +132,7 @@ let splatter
 function init() {
     splatter = []
     rain = []
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 500; i++) {
         rain.push(randomRainDrop(c))
     }
 }
@@ -142,7 +142,7 @@ function animate() {
     requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
 
-    rain.forEach((drop,index) => {
+    rain.forEach(drop=> {
         drop.update();
     });
 

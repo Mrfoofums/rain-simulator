@@ -96,15 +96,11 @@
 "use strict";
 
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _utils = __webpack_require__(/*! ./utils */ "./src/utils.js");
 
 var _utils2 = _interopRequireDefault(_utils);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var canvas = document.querySelector('canvas');
 var c = canvas.getContext('2d');
@@ -119,116 +115,89 @@ var mouse = {
 
 var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
 
-var RainDrop = function () {
-    function RainDrop(x, y, velocity, radius, color) {
-        _classCallCheck(this, RainDrop);
+function RainDrop(x, y, velocity, radius, color) {
 
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.velocity = velocity;
-        this.color = color;
-        this.gravity = .1;
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.velocity = velocity;
+    this.color = color;
+    this.gravity = .1;
+}
+
+RainDrop.prototype.draw = function () {
+    c.beginPath();
+    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    c.fillStyle = this.color;
+    c.fill();
+    c.closePath();
+};
+
+RainDrop.prototype.update = function () {
+    this.draw();
+
+    if (this.y + this.radius > innerHeight) {
+        this.splatter();
+
+        this.x = _utils2.default.randomIntFromRange(0, innerWidth);
+        this.y = _utils2.default.randomIntFromRange(-1000, 0);
+        this.velocity.y = _utils2.default.randomIntFromRange(5, 15);
+    } else {
+        this.velocity.y += this.gravity;
     }
+    this.y += this.velocity.y;
+};
 
-    _createClass(RainDrop, [{
-        key: 'draw',
-        value: function draw() {
-            c.beginPath();
-            c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            c.fillStyle = this.color;
-            c.fill();
-            c.closePath();
-        }
-    }, {
-        key: 'randomIntFromRange',
-        value: function randomIntFromRange(min, max) {
-            return Math.floor(Math.random() * (max - min + 1) + min);
-        }
-    }, {
-        key: 'update',
-        value: function update() {
-            this.draw();
-
-            if (this.y + this.radius > innerHeight) {
-                this.splatter();
-
-                this.x = _utils2.default.randomIntFromRange(0, innerWidth);
-                this.y = _utils2.default.randomIntFromRange(-1000, 0);
-                this.velocity.y = _utils2.default.randomIntFromRange(5, 15);
-            } else {
-                this.velocity.y += this.gravity;
-            }
-            this.y += this.velocity.y;
-        }
-    }, {
-        key: 'splatter',
-        value: function splatter() {
-            // console.log('splatting')
-            for (var i = 0; i < 3; i++) {
-                var velocity = {
-                    x: _utils2.default.randomIntFromRange(-5, 5),
-                    y: _utils2.default.randomIntFromRange(-5, 5)
-                };
-                // let radius = 1;
-                _splatter.push(new Splatter(this.x, this.y, velocity, this.radius / 2, 'white'));
-            }
-        }
-    }]);
-
-    return RainDrop;
-}();
-
-;
-
-var Splatter = function () {
-    function Splatter(x, y, velocity, radius, color) {
-        _classCallCheck(this, Splatter);
-
-        this.x = x;
-        this.y = y;
-        this.velocity = velocity;
-        this.color = color;
-        this.radius = radius;
-
-        this.friction = 0.8;
-        this.gravity = .1;
-        this.ttl = 100;
-        this.opacity = 1;
+RainDrop.prototype.splatter = function () {
+    // console.log('splatting')
+    for (var i = 0; i < 3; i++) {
+        var velocity = {
+            x: _utils2.default.randomIntFromRange(-5, 5),
+            y: _utils2.default.randomIntFromRange(-5, 5)
+        };
+        var radius = 1;
+        splatter.push(new Splatter(this.x, this.y, velocity, radius, 'white'));
     }
+};
 
-    _createClass(Splatter, [{
-        key: 'draw',
-        value: function draw() {
-            c.save();
-            c.beginPath();
-            c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            c.fillStyle = 'rgba(255,255,255,' + this.opacity + ')';
-            c.shadowColor = '#E3EAEF';
-            c.shadowBlur = 20;
-            c.fill();
-            c.closePath();
-            c.restore();
-        }
-    }, {
-        key: 'update',
-        value: function update() {
-            this.draw();
+function Splatter(x, y, velocity, radius, color) {
+    this.x = x;
+    this.y = y;
+    this.velocity = velocity;
+    this.color = color;
+    this.radius = radius;
 
-            if (this.y + this.radius + this.velocity.y > canvas.height || this.y - this.radius <= 0) {
-                this.velocity.y = -this.velocity.y * this.friction;
-            } else {
-                this.velocity.y += this.gravity;
-            }
-            this.y += this.velocity.y;
-            this.x += this.velocity.x;
-            this.ttl -= 1;
-            this.opacity -= 1 / this.ttl;
-        }
-    }]);
+    this.friction = 0.8;
+    this.gravity = .1;
+    this.ttl = 50;
+    this.opacity = 1;
+}
 
-    return Splatter;
-}();
+Splatter.prototype.draw = function () {
+    c.save();
+    c.beginPath();
+    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    c.fillStyle = 'rgba(255,255,255,' + this.opacity + ')';
+    c.shadowColor = '#E3EAEF';
+    c.shadowBlur = 20;
+    c.fill();
+    c.closePath();
+    c.restore();
+};
+
+Splatter.prototype.update = function () {
+    this.draw();
+
+    if (this.y + this.radius + this.velocity.y > canvas.height || this.y - this.radius <= 0) {
+        this.velocity.y = -this.velocity.y * this.friction;
+    } else {
+        this.velocity.y += this.gravity;
+    }
+    this.y += this.velocity.y;
+    this.x += this.velocity.x;
+    this.ttl -= 1;
+    this.opacity -= 1 / this.ttl;
+};
 
 function randomRainDrop() {
 
@@ -259,11 +228,11 @@ addEventListener('resize', function () {
 
 // Implementation
 var rain = void 0;
-var _splatter = void 0;
+var splatter = void 0;
 function init() {
-    _splatter = [];
+    splatter = [];
     rain = [];
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 500; i++) {
         rain.push(randomRainDrop(c));
     }
 }
@@ -273,18 +242,18 @@ function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height);
 
-    rain.forEach(function (drop, index) {
+    rain.forEach(function (drop) {
         drop.update();
     });
 
-    _splatter.forEach(function (splat, index) {
+    splatter.forEach(function (splat, index) {
         //lol @ splat
         splat.update();
         if (splat.ttl == 0) {
-            _splatter.splice(index, 1);
+            splatter.splice(index, 1);
         }
     });
-    console.log(_splatter.length);
+    console.log(splatter.length);
 }
 
 init();
