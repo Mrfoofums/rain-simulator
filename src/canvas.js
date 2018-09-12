@@ -14,9 +14,8 @@ const mouse = {
 
 const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
 
-class RainDrop {
-  
-    constructor(x,y, velocity ,radius, color){
+function RainDrop(x,y, velocity ,radius, color) {
+   
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -25,7 +24,7 @@ class RainDrop {
         this.gravity = .1;
     }
 
-    draw(){
+    RainDrop.prototype.draw = function (){
         c.beginPath()
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
         c.fillStyle = this.color
@@ -33,11 +32,7 @@ class RainDrop {
         c.closePath()
     }
 
-   randomIntFromRange(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min)
-    }
-
-    update(){
+    RainDrop.prototype.update=function (){
         this.draw();
 
         if(this.y + this.radius > innerHeight){
@@ -53,21 +48,19 @@ class RainDrop {
 
     }
 
-    splatter(){
+    Raindrop.prototype.splatter = function (){
         // console.log('splatting')
         for(let i =0; i < 3; i ++){
             let velocity = {
                 x: utils.randomIntFromRange(-5,5),
                 y: utils.randomIntFromRange(-5,5)
             } ;
-            // let radius = 1;
-            splatter.push(new Splatter(this.x, this.y,velocity,this.radius/2,'white'))
+            let radius = 1;
+            splatter.push(new Splatter(this.x, this.y,velocity, radius,'white'))
         }
     }
-};
 
-class Splatter {
-    constructor(x,y,velocity,radius,color){
+function  Splatter (x,y,velocity,radius,color) {
         this.x = x;
         this.y = y;
         this.velocity = velocity;
@@ -80,7 +73,7 @@ class Splatter {
         this.opacity = 1;
     }
 
-    draw(){
+    Splatter.prototype.draw=function(){
         c.save()
         c.beginPath()
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
@@ -92,7 +85,7 @@ class Splatter {
         c.restore()
     }
 
-    update(){
+    Splatter.prototype.update = function(){
         this.draw()
 
         if(this.y + this.radius + this.velocity.y > canvas.height || this.y - this.radius <= 0){
@@ -105,7 +98,6 @@ class Splatter {
         this.ttl-=1;
         this.opacity -= 1/this.ttl
     }
-}
 
 function randomRainDrop() {
 
