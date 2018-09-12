@@ -16,22 +16,21 @@ const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
 
 class RainDrop {
   
-    constructor(x,y, velocity ,radius, color, c){
+    constructor(x,y, velocity ,radius, color){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.velocity = velocity;
         this.color = color;
-        this.c = c;
         this.gravity = .1;
     }
 
     draw(){
-        this.c.beginPath()
-        this.c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
-        this.c.fillStyle = this.color
-        this.c.fill()
-        this.c.closePath()
+        c.beginPath()
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
+        c.fillStyle = this.color
+        c.fill()
+        c.closePath()
     }
 
    randomIntFromRange(min, max) {
@@ -55,8 +54,8 @@ class RainDrop {
     }
 
     splatter(){
-        console.log('splatting')
-        for(let i =0; i < 5; i ++){
+        // console.log('splatting')
+        for(let i =0; i < 3; i ++){
             let velocity = {
                 x: utils.randomIntFromRange(-5,5),
                 y: utils.randomIntFromRange(-5,5)
@@ -108,7 +107,7 @@ class Splatter {
     }
 }
 
-function randomRainDrop(c) {
+function randomRainDrop() {
 
     let x = utils.randomIntFromRange(0, innerWidth)
     let y = utils.randomIntFromRange(-5000,0);
@@ -117,7 +116,7 @@ function randomRainDrop(c) {
         y: utils.randomIntFromRange(5,15)
     }
     let radius = utils.randomIntFromRange(1,3);
-    let drop = new RainDrop(x,y,velocity,radius,'white',c);
+    let drop = new RainDrop(x,y,velocity,radius,'white');
 
     return drop;
 }
@@ -162,7 +161,7 @@ function animate() {
             splatter.splice(index,1)
         }
     })
-    // console.log(splatter)
+    console.log(splatter.length)
 }
 
 init()

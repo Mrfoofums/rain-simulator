@@ -120,7 +120,7 @@ var mouse = {
 var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
 
 var RainDrop = function () {
-    function RainDrop(x, y, velocity, radius, color, c) {
+    function RainDrop(x, y, velocity, radius, color) {
         _classCallCheck(this, RainDrop);
 
         this.x = x;
@@ -128,18 +128,17 @@ var RainDrop = function () {
         this.radius = radius;
         this.velocity = velocity;
         this.color = color;
-        this.c = c;
         this.gravity = .1;
     }
 
     _createClass(RainDrop, [{
         key: 'draw',
         value: function draw() {
-            this.c.beginPath();
-            this.c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            this.c.fillStyle = this.color;
-            this.c.fill();
-            this.c.closePath();
+            c.beginPath();
+            c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            c.fillStyle = this.color;
+            c.fill();
+            c.closePath();
         }
     }, {
         key: 'randomIntFromRange',
@@ -165,8 +164,8 @@ var RainDrop = function () {
     }, {
         key: 'splatter',
         value: function splatter() {
-            console.log('splatting');
-            for (var i = 0; i < 5; i++) {
+            // console.log('splatting')
+            for (var i = 0; i < 3; i++) {
                 var velocity = {
                     x: _utils2.default.randomIntFromRange(-5, 5),
                     y: _utils2.default.randomIntFromRange(-5, 5)
@@ -231,7 +230,7 @@ var Splatter = function () {
     return Splatter;
 }();
 
-function randomRainDrop(c) {
+function randomRainDrop() {
 
     var x = _utils2.default.randomIntFromRange(0, innerWidth);
     var y = _utils2.default.randomIntFromRange(-5000, 0);
@@ -240,7 +239,7 @@ function randomRainDrop(c) {
         y: _utils2.default.randomIntFromRange(5, 15)
     };
     var radius = _utils2.default.randomIntFromRange(1, 3);
-    var drop = new RainDrop(x, y, velocity, radius, 'white', c);
+    var drop = new RainDrop(x, y, velocity, radius, 'white');
 
     return drop;
 }
@@ -285,7 +284,7 @@ function animate() {
             _splatter.splice(index, 1);
         }
     });
-    // console.log(splatter)
+    console.log(_splatter.length);
 }
 
 init();
