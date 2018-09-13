@@ -156,7 +156,7 @@ RainDrop.prototype.splatter = function () {
             y: _utils2.default.randomIntFromRange(-5, 5)
         };
         var radius = 1;
-        splatter.push(new Splatter(this.x, this.y, velocity, radius, 'white'));
+        splatter.push(new Splatter(this.x, this.y, velocity, radius, 'red'));
     }
 };
 
@@ -208,7 +208,7 @@ function randomRainDrop() {
         y: _utils2.default.randomIntFromRange(5, 15)
     };
     var radius = _utils2.default.randomIntFromRange(1, 3);
-    var drop = new RainDrop(x, y, velocity, radius, 'white');
+    var drop = new RainDrop(x, y, velocity, radius, 'red');
 
     return drop;
 }
@@ -232,7 +232,7 @@ var splatter = void 0;
 function init() {
     splatter = [];
     rain = [];
-    for (var i = 0; i < 500; i++) {
+    for (var i = 0; i < 200; i++) {
         rain.push(randomRainDrop(c));
     }
 }

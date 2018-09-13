@@ -56,7 +56,7 @@ function RainDrop(x,y, velocity ,radius, color) {
                 y: utils.randomIntFromRange(-5,5)
             } ;
             let radius = 1;
-            splatter.push(new Splatter(this.x, this.y,velocity, radius,'white'))
+            splatter.push(new Splatter(this.x, this.y,velocity, radius,'red'))
         }
     }
 
@@ -99,6 +99,28 @@ function  Splatter (x,y,velocity,radius,color) {
         this.opacity -= 1/this.ttl
     }
 
+function Player(x,y,velocity, color){
+    this.x = x;
+    this.y = y;
+    this.velocity = velocity;
+    this.color = color;
+    this.health = 100;
+
+    this.width = 20;
+    this.height = 20
+}    
+
+Player.prototype.draw = function(){
+    c.fillStyle = 'white'
+    c.fillRect(this.x + this.width/2, this.y, this.width, this.height)
+    c.fill()
+    c.closePath()
+}
+
+Player.prototype.update = function(){
+    this.draw();
+}
+
 function randomRainDrop() {
 
     let x = utils.randomIntFromRange(0, innerWidth)
@@ -108,7 +130,7 @@ function randomRainDrop() {
         y: utils.randomIntFromRange(5,15)
     }
     let radius = utils.randomIntFromRange(1,3);
-    let drop = new RainDrop(x,y,velocity,radius,'white');
+    let drop = new RainDrop(x,y,velocity,radius,'red');
 
     return drop;
 }
@@ -132,7 +154,7 @@ let splatter
 function init() {
     splatter = []
     rain = []
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 200; i++) {
         rain.push(randomRainDrop(c))
     }
 }
