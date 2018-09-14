@@ -199,6 +199,36 @@ Splatter.prototype.update = function () {
     this.opacity -= 1 / this.ttl;
 };
 
+function Player(color) {
+    this.width = 100;
+    this.height = 100;
+    this.moveVel = 20;
+    this.x = innerWidth / 2;
+    this.y = innerHeight - this.height;
+    this.velocity = {
+        x: 0,
+        y: 0
+    };
+    this.color = color;
+    this.health = 100;
+    this.friction = 0.99;
+}
+
+Player.prototype.draw = function () {
+    c.fillStyle = this.color;
+    c.fillRect(this.x, this.y, this.width, this.height);
+    c.fill();
+    c.closePath();
+};
+
+Player.prototype.update = function () {
+    this.draw();
+
+    this.x += this.velocity.x;
+
+    this.velocity.x *= this.friction;
+};
+
 function randomRainDrop() {
 
     var x = _utils2.default.randomIntFromRange(0, innerWidth);
@@ -207,7 +237,7 @@ function randomRainDrop() {
         x: 0,
         y: _utils2.default.randomIntFromRange(5, 15)
     };
-    var radius = _utils2.default.randomIntFromRange(1, 3);
+    var radius = _utils2.default.randomIntFromRange(3, 4);
     var drop = new RainDrop(x, y, velocity, radius, 'red');
 
     return drop;
@@ -226,13 +256,26 @@ addEventListener('resize', function () {
     init();
 });
 
+addEventListener('keydown', function (event) {
+    // console.log(event);
+    if (event.key == 'ArrowLeft') {
+        player.velocity.x = -player.moveVel;
+    } else if (event.key == 'ArrowRight') {
+        player.velocity.x = player.moveVel;
+    } else if (event.key == 'ArrowDown') {
+        player.velocity.x = 0;
+    }
+});
+
 // Implementation
 var rain = void 0;
 var splatter = void 0;
+var player = void 0;
 function init() {
     splatter = [];
     rain = [];
-    for (var i = 0; i < 200; i++) {
+    player = new Player('white');
+    for (var i = 0; i < 50; i++) {
         rain.push(randomRainDrop(c));
     }
 }
@@ -253,7 +296,10 @@ function animate() {
             splatter.splice(index, 1);
         }
     });
-    console.log(splatter.length);
+
+    //player
+    player.update();
+    // console.log(splatter.length)
 }
 
 init();

@@ -99,27 +99,38 @@ function  Splatter (x,y,velocity,radius,color) {
         this.opacity -= 1/this.ttl
     }
 
-function Player(x,y,velocity, color){
-    this.x = x;
-    this.y = y;
-    this.velocity = velocity;
+function Player(color){
+    this.width = 100;
+    this.height = 100
+    this.moveVel = 20;
+    this.x = innerWidth/2;
+    this.y = innerHeight - this.height;
+    this.velocity = {
+        x:0,
+        y:0
+    }
     this.color = color;
     this.health = 100;
+    this.friction = 0.99;
 
-    this.width = 20;
-    this.height = 20
 }    
 
 Player.prototype.draw = function(){
-    c.fillStyle = 'white'
-    c.fillRect(this.x + this.width/2, this.y, this.width, this.height)
+    c.fillStyle = this.color
+    c.fillRect(this.x,this.y, this.width, this.height)
     c.fill()
     c.closePath()
 }
 
 Player.prototype.update = function(){
     this.draw();
+
+    this.x+=this.velocity.x;
+
+    this.velocity.x *= this.friction
 }
+
+
 
 function randomRainDrop() {
 
@@ -129,7 +140,7 @@ function randomRainDrop() {
         x: 0,
         y: utils.randomIntFromRange(5,15)
     }
-    let radius = utils.randomIntFromRange(1,3);
+    let radius = utils.randomIntFromRange(3,4);
     let drop = new RainDrop(x,y,velocity,radius,'red');
 
     return drop;
@@ -148,13 +159,28 @@ addEventListener('resize', () => {
     init()
 })
 
+addEventListener('keydown', event=> {
+    // console.log(event);
+    if(event.key=='ArrowLeft'){
+        player.velocity.x =-player.moveVel;
+    }
+    else if(event.key == 'ArrowRight'){
+        player.velocity.x = player.moveVel
+    }
+    else if(event.key == 'ArrowDown'){
+        player.velocity.x = 0
+    }
+})
+
 // Implementation
 let rain
 let splatter
+let player
 function init() {
     splatter = []
     rain = []
-    for (let i = 0; i < 200; i++) {
+    player = new Player('white')
+    for (let i = 0; i < 50; i++) {
         rain.push(randomRainDrop(c))
     }
 }
@@ -175,7 +201,10 @@ function animate() {
             splatter.splice(index,1)
         }
     })
-    console.log(splatter.length)
+
+    //player
+    player.update();
+    // console.log(splatter.length)
 }
 
 init()
